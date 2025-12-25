@@ -21,7 +21,7 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
     public class HTTPRequests extends BaseTest {
-
+      int id;
     @Test(priority = 1)
     void getUsers() {
 
@@ -34,7 +34,7 @@ import static org.hamcrest.Matchers.*;
                 .body("page", equalTo(2))
                 .log().all();
     }
-    @Test
+    @Test(priority =2 )
     void createUser(){
         //Creating the user means we have to pass some user information
         Map data = new HashMap<>();
@@ -43,15 +43,52 @@ import static org.hamcrest.Matchers.*;
         data.put("name", "ritesh");
         data.put("job", "automation");
 
-        given()
+        id=given()
 
-                .contentType(ContentType.JSON)
+//                .contentType(ContentType.JSON)
+                .contentType("application/json")
                 .body(data)
                 .when()
                 .post("api/users")
+                .jsonPath().getInt("id");
+
+//                .then()
+//                .statusCode(201)
+//                .log().all();
+        //from the response we have to capture the id and using the id then we can easily update or delete
+        //the user which we have already created.............
+    }
+    @Test(priority = 3,dependsOnMethods = {"createUser"})
+    void UpdateUser(){
+
+        Map data = new HashMap<>();
+
+        data.put("name", "Amar");
+        data.put("job", "Teacher");
+
+        given()
+
+//                .contentType(ContentType.JSON)
+                .contentType("application/json")
+                .body(data)
+                .when()
+                .put("api/users/"+id)
+
+
                 .then()
-                .statusCode(201)
+                .statusCode(200)
                 .log().all();
+
+    }
+    @Test(priority = 4)
+    void deleteUser(){
+        given()
+                .when()
+                .delete("api/users/"+id)
+                .then()
+                .statusCode(204)
+                .log().all();
+
     }
 }
 
