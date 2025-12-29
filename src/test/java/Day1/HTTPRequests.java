@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.*;
                 .then()
                 .statusCode(200)
                 .body("page", equalTo(2))
+                .body("data.size()", greaterThan(0))
                 .log().all();
     }
     @Test(priority =2 )
