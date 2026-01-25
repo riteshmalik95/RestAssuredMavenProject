@@ -1,0 +1,3 @@
+=Sometimes when you send a request , we will get cookies and headers as a part of the
+Responses now we will want to see what are cookies and headers have been created by the
+Request and i want to get captured some information and data from the cookies and headers.
